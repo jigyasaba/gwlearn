@@ -993,7 +993,8 @@ class BaseClassifier(ClassifierMixin, _BaseModel):
             self._compute_information_criteria()
 
         # Compute pooled score from local models
-        # This aggregates predictions from all local models instead of using ensemble predictions
+        # This aggregates predictions from all local models
+        # instead of using ensemble predictions
         try:
             # Concatenate all local y and predictions from fitted neighborhoods
             # (_y_local and _pred_local are collected during local model fitting)
