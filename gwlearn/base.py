@@ -13,6 +13,7 @@ from joblib import dump, load
 from libpysal import graph
 from scipy.spatial import KDTree
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.utils.parallel import Parallel, delayed
 
@@ -990,6 +991,23 @@ class BaseClassifier(ClassifierMixin, _BaseModel):
             if self.verbose:
                 print(f"{(time() - self._start):.2f}s: Computing information criteria")
             self._compute_information_criteria()
+
+        # Compute pooled score from local models
+        try:
+            y_all = np.concatenate([
+                y_local for y_local in self._y_local if len(y_local) > 0
+            ])
+            pred_all = np.concatenate([
+                pred_local for pred_local in self._pred_local if len(pred_local) > 0
+            ])
+
+            self.pooled_score_ = accuracy_score(y_all, pred_all)
+
+        except Exception:
+            self.pooled_score_ = np.nan
+
+        # TODO: score_ should be an alias of pooled_score_
+        self.score_ = self.pooled_score_
 
         return self
 

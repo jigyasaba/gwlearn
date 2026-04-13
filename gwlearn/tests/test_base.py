@@ -1949,6 +1949,33 @@ def test_classifier_score(sample_data):
     # Should be perfect on training data with include_focal=True, but not required
     assert isinstance(acc, float)
 
+def test_score_attribute_matches_pooled(sample_data):
+    """Test that score_ matches pooled local model score."""
+    X, y, geometry = sample_data
+
+    clf = BaseClassifier(
+        LogisticRegression,
+        bandwidth=10,
+        fixed=False,
+        random_state=42,
+        max_iter=200,
+        strict=False,
+        n_jobs=1,
+    )
+
+    clf.fit(X, y, geometry)
+
+    # Ensure attribute exists
+    assert hasattr(clf, "score_")
+    assert hasattr(clf, "pooled_score_")
+
+    # They should be equal (alias behavior)
+    assert clf.score_ == clf.pooled_score_
+
+    # Basic sanity check
+    assert isinstance(clf.score_, float)
+    assert 0.0 <= clf.score_ <= 1.0
+
 
 def test_classifier_local_metric(sample_data):
     """Test local_metric on BaseClassifier."""
