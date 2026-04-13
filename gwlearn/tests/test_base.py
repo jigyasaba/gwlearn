@@ -1949,6 +1949,7 @@ def test_classifier_score(sample_data):
     # Should be perfect on training data with include_focal=True, but not required
     assert isinstance(acc, float)
 
+
 def test_score_attribute_matches_pooled(sample_data):
     """Test that score_ matches pooled local model score."""
     X, y, geometry = sample_data

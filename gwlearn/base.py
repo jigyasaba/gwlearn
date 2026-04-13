@@ -997,17 +997,17 @@ class BaseClassifier(ClassifierMixin, _BaseModel):
         try:
             # Concatenate all local y and predictions from fitted neighborhoods
             # (_y_local and _pred_local are collected during local model fitting)
-            y_all = np.concatenate([
-                y_local for y_local in self._y_local if len(y_local) > 0
-            ])
-            pred_all = np.concatenate([
-                pred_local for pred_local in self._pred_local if len(pred_local) > 0
-            ])
+            y_all = np.concatenate(
+                [y_local for y_local in self._y_local if len(y_local) > 0]
+            )
+            pred_all = np.concatenate(
+                [pred_local for pred_local in self._pred_local if len(pred_local) > 0]
+            )
             # Compute pooled accuracy across all local models
             self.pooled_score_ = accuracy_score(y_all, pred_all)
 
         except Exception:
-            #in case no valid local model exists
+            # in case no valid local model exists
             self.pooled_score_ = np.nan
 
         # TODO: score_ should be an alias of pooled_score_
